@@ -1,0 +1,262 @@
+<!-- TOP RIGHT CONTROLS -->
+<div class="fixed top-5 right-5 z-50 flex items-center gap-2">
+    <!-- Language -->
+    <div class="flex items-center rounded-2xl border border-black/10 bg-white/80 backdrop-blur
+           dark:bg-white/10 dark:border-white/15">
+        <button (click)="setLang('es')" type="button" class="h-11 px-3 rounded-2xl text-sm font-semibold transition
+             hover:bg-black/5 active:scale-[0.98]
+             dark:hover:bg-white/15" [ngClass]="lang() === 'es'
+        ? 'text-[#151312] dark:text-white'
+        : 'text-black/50 dark:text-white/50'">
+             ES
+        </button>
+        <div class="h-6 w-px bg-black/10 dark:bg-white/10"></div>
+        <button (click)="setLang('en')" type="button" class="h-11 px-3 rounded-2xl text-sm font-semibold transition
+             hover:bg-black/5 active:scale-[0.98]
+             dark:hover:bg-white/15" [ngClass]="lang() === 'en'
+        ? 'text-[#151312] dark:text-white'
+        : 'text-black/50 dark:text-white/50'">
+             EN
+        </button>
+    </div>
+
+    <!-- Theme -->
+    <button (click)="toggleTheme()" class="h-11 w-11 rounded-2xl border border-black/10
+           bg-white/80 backdrop-blur hover:bg-black/5 transition
+           dark:bg-white/10 dark:border-white/15 dark:hover:bg-white/15
+           active:scale-[0.98]" [attr.aria-label]="'ACTIONS.THEME_ARIA' | translate"
+        [attr.title]="'ACTIONS.THEME_TITLE' | translate">
+        <span *ngIf="!isDark()" class="text-lg">🌙</span>
+        <span *ngIf="isDark()" class="text-lg">☀️</span>
+    </button>
+</div>
+
+<section class="max-w-7xl mx-auto px-4 pt-28 pb-16 transition-colors duration-200">
+    <div class="md:ml-20">
+        <div class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-xs font-semibold
+             dark:border-white/10 dark:bg-white/10 transition-colors duration-200 font-sans">
+            <span class="h-2 w-2 rounded-full bg-black/70 dark:bg-white/70"></span>
+            <span class="text-black/80 dark:text-white/80">{{ 'APP.BADGE' | translate }}</span>
+        </div>
+
+        <h1
+            class="mt-6 font-sans text-3xl md:text-5xl font-extrabold tracking-tight text-[#151312] dark:text-white transition-colors duration-200">
+            {{ 'APP.TITLE' | translate }}
+            <span
+                class="block text-black/50 text-base md:text-lg font-sans font-medium mt-3 dark:text-white/60 transition-colors duration-200">
+                {{ 'APP.SUBTITLE' | translate }}
+            </span>
+        </h1>
+
+        <div class="mt-8 flex flex-wrap gap-2">
+            <button (click)="generar()" class="h-10 px-4 rounded-xl bg-[#151312] text-white hover:bg-black transition-colors duration-200 text-sm font-semibold
+               dark:bg-white dark:text-[#151312] dark:hover:bg-white/90">
+                {{ 'ACTIONS.GENERATE' | translate }}
+            </button>
+
+            <div class="relative">
+                <button (click)="copiarLista()" [disabled]="stats().total === 0" class="h-10 px-4 rounded-xl border border-black/10 bg-white hover:bg-black/5 transition-colors duration-200 text-sm font-semibold
+           disabled:opacity-40 disabled:cursor-not-allowed
+           dark:bg-white/10 dark:border-white/10 dark:hover:bg-white/15">
+                    {{ 'ACTIONS.COPY' | translate }}
+                </button>
+
+                <!-- Mini feedback -->
+                <div *ngIf="copied()" class="absolute -top-10 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 mb-2 text-xs font-semibold
+           border border-black/10 bg-white/90 backdrop-blur shadow-sm
+           dark:bg-white/10 dark:border-white/15
+           packit-copied">
+                    {{ ('ACTIONS.COPIED' | translate) || 'Copiado' }}
+                </div>
+            </div>
+
+            <button (click)="limpiar()" class="h-10 px-4 rounded-xl border border-black/10 bg-white hover:bg-black/5 transition-colors duration-200 text-sm font-semibold
+               dark:bg-white/10 dark:border-white/10 dark:hover:bg-white/15">
+                {{ 'ACTIONS.RESET' | translate }}
+            </button>
+
+            <span class="ml-auto text-xs font-semibold text-black/50 dark:text-white/50 self-center">
+                {{ 'STATS.DONE_OF_TOTAL' | translate:{ done: stats().hecho, total: stats().total, left: stats().faltan }
+                }}
+            </span>
+        </div>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+        <!-- Config -->
+        <div
+            class="rounded-2xl border border-black/10 bg-white shadow-sm p-6 dark:bg-[#0f0f0f] dark:border-white/10 transition-colors duration-200">
+            <h2 class="font-serif text-xl font-bold text-[#151312] dark:text-white">
+                {{ 'CONFIG.TITLE' | translate }}
+            </h2>
+
+            <!-- Modo -->
+            <div class="mt-5">
+                <label class="block text-xs font-semibold text-black/60 dark:text-white/60">
+                    {{ 'CONFIG.TYPE_LABEL' | translate }}
+                </label>
+                <div class="mt-2 flex gap-2">
+                    <button (click)="modo.set('viaje')"
+                        class="h-10 px-4 rounded-xl border text-sm font-semibold transition-colors duration-200"
+                        [ngClass]="modo() === 'viaje'
+              ? 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        ✈️ {{ 'CONFIG.MODE_TRIP' | translate }}
+                    </button>
+
+                    <button (click)="modo.set('mudanza')"
+                        class="h-10 px-4 rounded-xl border text-sm font-semibold transition-colors duration-200"
+                        [ngClass]="modo() === 'mudanza'
+              ? 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        📦 {{ 'CONFIG.MODE_MOVE' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Duración -->
+            <div class="mt-5" *ngIf="modo() === 'viaje'">
+                <label class="block text-xs font-semibold text-black/60 dark:text-white/60">
+                    {{ 'CONFIG.DURATION_LABEL' | translate }}
+                </label>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button (click)="duracion.set('1-3')"
+                        class="h-10 px-4 rounded-xl border text-sm font-semibold transition-colors duration-200"
+                        [ngClass]="duracion() === '1-3'
+              ? 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        {{ 'CONFIG.DURATION_1_3' | translate }}
+                    </button>
+
+                    <button (click)="duracion.set('4-7')"
+                        class="h-10 px-4 rounded-xl border text-sm font-semibold transition-colors duration-200"
+                        [ngClass]="duracion() === '4-7'
+              ? 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        {{ 'CONFIG.DURATION_4_7' | translate }}
+                    </button>
+
+                    <button (click)="duracion.set('8+')"
+                        class="h-10 px-4 rounded-xl border text-sm font-semibold transition-colors duration-200"
+                        [ngClass]="duracion() === '8+'
+              ? 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        {{ 'CONFIG.DURATION_8_PLUS' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contextos -->
+            <div class="mt-6" *ngIf="modo() === 'viaje'">
+                <label class="block text-xs font-semibold text-black/60 dark:text-white/60">
+                    {{ 'CONFIG.CONTEXT_LABEL' | translate }}
+                </label>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button *ngFor="let c of contextoOpciones" (click)="toggleContexto(c.key)" class="h-10 px-4 rounded-xl border text-sm font-semibold transition-all duration-150
+                   flex items-center gap-2
+                   hover:shadow-sm active:scale-[0.98]
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20
+                   dark:focus-visible:ring-white/20"
+                        [ngClass]="contextos().includes(c.key)
+              ? 'border-black/30 bg-black/10 ring-2 ring-black/10 dark:border-white/30 dark:bg-white/15 dark:ring-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        <span>{{ c.icon }}</span>
+                        <span>{{ c.labelKey | translate}}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Extras -->
+            <div class="mt-6">
+                <label class="block text-xs font-semibold text-black/60 dark:text-white/60">
+                    {{ 'CONFIG.EXTRAS_LABEL' | translate }}
+                </label>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button *ngFor="let e of extraOpciones" (click)="toggleExtra(e.key)" class="h-10 px-4 rounded-xl border text-sm font-semibold transition-all duration-150
+                   flex items-center gap-2
+                   hover:shadow-sm active:scale-[0.98]
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20
+                   dark:focus-visible:ring-white/20"
+                        [ngClass]="extras().includes(e.key)
+              ? 'border-black/30 bg-black/10 ring-2 ring-black/10 dark:border-white/30 dark:bg-white/15 dark:ring-white/10'
+              : 'border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10'">
+                        <span>{{ e.icon }}</span>
+                        <span>{{ e.labelKey | translate}}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add item -->
+            <div class="mt-6">
+                <label class="block text-xs font-semibold text-black/60 dark:text-white/60">
+                    {{ 'CONFIG.ADD_ITEM_LABEL' | translate }}
+                </label>
+                <div class="mt-2 flex gap-2">
+                    <input
+                        class="h-10 flex-1 rounded-xl border border-black/10 px-4 text-sm outline-none bg-white
+                   focus:ring-2 focus:ring-black/10
+                   dark:bg-white/5 dark:text-white dark:border-white/10 dark:focus:ring-white/10 transition-colors duration-200"
+                        [value]="nuevoItem()" (input)="nuevoItem.set($any($event.target).value)"
+                        [placeholder]="'CONFIG.ADD_ITEM_PLACEHOLDER' | translate" />
+                    <button (click)="agregarItem()" class="h-10 px-4 rounded-xl border border-black/10 bg-white hover:bg-black/5 transition-colors duration-200 text-sm font-semibold
+                   dark:bg-white/10 dark:border-white/10 dark:hover:bg-white/15">
+                        {{ 'CONFIG.ADD_ITEM_BUTTON' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist -->
+        <div class="rounded-2xl border border-black/10 bg-white shadow-sm p-6
+             dark:bg-[#0f0f0f] dark:border-white/10 transition-colors duration-200" [class.packit-pop]="pop()">
+            <div class="flex items-center justify-between">
+                <h2 class="font-serif text-xl font-bold text-[#151312] dark:text-white">
+                    {{ 'CHECKLIST.TITLE' | translate }}
+                </h2>
+                <span class="text-xs font-semibold text-black/40 dark:text-white/40">
+                    {{ stats().total === 0 ? ('CHECKLIST.HINT_EMPTY' | translate) : ('CHECKLIST.HINT_READY' | translate)
+                    }}
+                </span>
+            </div>
+
+            <div class="mt-6" *ngIf="stats().total === 0">
+                <div class="rounded-2xl border border-black/10 bg-black/2 p-6 dark:border-white/10 dark:bg-white/5">
+                    <div class="text-sm text-black/50 dark:text-white/50">
+                        {{ 'CHECKLIST.EMPTY_CARD' | translate }}
+                        <b>{{ 'CHECKLIST.EMPTY_CTA' | translate }}</b>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 space-y-6" *ngIf="stats().total > 0">
+                <div *ngFor="let group of itemsPorCategoria()">
+                    <div class="text-xs font-semibold tracking-wide text-black/50 dark:text-white/50 mb-2">
+                        {{ group[0] | uppercase }}
+                    </div>
+
+                    <div class="space-y-2">
+                        <label *ngFor="let it of group[1]" class="flex items-center gap-3 rounded-xl border border-black/10 px-3 py-2 bg-white hover:bg-black/5 transition-colors duration-200
+                     dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10">
+                            <input type="checkbox" class="h-4 w-4 accent-black dark:accent-white" [checked]="it.hecho"
+                                (change)="toggleHecho(it.id)" />
+
+                            <span class="text-sm flex-1"
+                                [ngClass]="it.hecho ? 'line-through text-black/40 dark:text-white/40' : 'text-[#151312] dark:text-white'">
+                                {{ ('ITEMS.' + it.texto) | translate }} </span>
+
+                            <span *ngIf="it.cantidad" class="ml-2 rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-[11px] font-semibold text-black/60
+                       dark:border-white/10 dark:bg-white/10 dark:text-white/70">
+                                x{{ it.cantidad }}
+                            </span>
+
+                            <button (click)="borrarItem(it.id)" type="button"
+                                class="text-xs font-semibold text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors">
+                                ✕
+                            </button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
